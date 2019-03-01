@@ -44,7 +44,7 @@ func updatePlasma() {
 		tpos2 = 3
 		tpos3 &= 511
 		tpos4 &= 511
-		var jdx = 0
+		jdx := 0
 		for jdx < w {
 			tpos1 &= 511
 			tpos2 &= 511
