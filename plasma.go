@@ -8,11 +8,13 @@ import (
 
 var (
 	window, doc, body, canvas, drawCtx     js.Value
-	w, h                                   int
 	sine                                   [512]int
 	color                                  [256]string
 	pos1, pos3, tpos1, tpos2, tpos3, tpos4 uint16
 )
+
+const w int = 320
+const h int = 200
 
 func main() {
 
@@ -47,7 +49,7 @@ func updatePlasma() {
 			tpos1 &= 511
 			tpos2 &= 511
 			x := sine[tpos1] + sine[tpos2] + sine[tpos3] + sine[tpos4]
-			var pidx = (128 + uint8(x>>4))
+			pidx := (128 + uint8(x>>4))
 			drawCtx.Set("fillStyle", color[pidx])
 			drawCtx.Call("fillRect", jdx, idx, jdx+1, idx+1)
 			tpos1 += 5
@@ -96,8 +98,6 @@ func setup() {
 	window = js.Global()
 	doc = window.Get("document")
 	body = doc.Get("body")
-	h = 200
-	w = 320
 
 	canvas = doc.Call("createElement", "canvas")
 	canvas.Set("height", h)
