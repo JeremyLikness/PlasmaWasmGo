@@ -12,7 +12,7 @@ var (
 	color                              [256]struct {
 		r, g, b byte
 	}
-	buffer                                 [w * h * 3]byte
+	buffer                                 [w * h * 4]byte
 	pos1, pos3, tpos1, tpos2, tpos3, tpos4 uint16
 )
 
@@ -56,9 +56,10 @@ func updatePlasma() {
 			tpos2 &= 511
 			x := sine[tpos1] + sine[tpos2] + sine[tpos3] + sine[tpos4]
 			pidx := (128 + uint8(x>>4))
-			base := ((idx * w) + jdx) * 3
+			base := ((idx * w) + jdx) * 4
 			buffer[base] = color[pidx].r
 			buffer[base+1] = color[pidx].g
+			buffer[base+3] = 255
 			tpos1 += 5
 			tpos2 += 3
 			jdx++

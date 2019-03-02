@@ -1,12 +1,11 @@
 window.plasmaRender = (w, h, ctx, buffer64) => {
-    let buffer = atob(buffer64);
-    for (let i = 0; i < h; i += 1) {
-        for (let j = 0; j < w; j += 1) {
-            let base = (i * w + j) * 3;
-            ctx.fillStyle = `rgb(${buffer.charCodeAt(base)},${buffer.charCodeAt(base+1)}, ${buffer.charCodeAt(base+2)})`;
-            ctx.fillRect(j, i, j + 1, i + 1);
-        }
+    let bytes = atob(buffer64);
+    let buffer = new Uint8ClampedArray(bytes.length);
+    for (let i = 0; i < bytes.length; i+=1) {
+        buffer[i] = bytes.charCodeAt(i);
     }
+    let imageData = new ImageData(buffer, w, h);
+    ctx.putImageData(imageData, 0, 0);
 };
 
 if (!WebAssembly.instantiateStreaming) { // polyfill
