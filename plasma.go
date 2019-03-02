@@ -1,15 +1,18 @@
 package main
 
 import (
-	"fmt"
+	"encoding/base64"
 	"math"
 	"syscall/js"
 )
 
 var (
-	window, doc, body, canvas, drawCtx     js.Value
-	sine                                   [512]int
-	color                                  [256]string
+	window, doc, body, canvas, drawCtx js.Value
+	sine                               [512]int
+	color                              [256]struct {
+		r, g, b byte
+	}
+	buffer                                 [w * h * 3]byte
 	pos1, pos3, tpos1, tpos2, tpos3, tpos4 uint16
 )
 
@@ -26,7 +29,10 @@ func main() {
 
 	renderer = js.FuncOf(func(this js.Value, args []js.Value) interface{} {
 		updatePlasma()
-		window.Call("setTimeout", renderer)
+		bufferParm := buffer[:]
+		pixelBuffer := base64.StdEncoding.EncodeToString(bufferParm)
+		window.Call("plasmaRender", w, h, drawCtx, pixelBuffer)
+		window.Call("requestAnimationFrame", renderer)
 		return nil
 	})
 
@@ -50,8 +56,9 @@ func updatePlasma() {
 			tpos2 &= 511
 			x := sine[tpos1] + sine[tpos2] + sine[tpos3] + sine[tpos4]
 			pidx := (128 + uint8(x>>4))
-			drawCtx.Set("fillStyle", color[pidx])
-			drawCtx.Call("fillRect", jdx, idx, jdx+1, idx+1)
+			base := ((idx * w) + jdx) * 3
+			buffer[base] = color[pidx].r
+			buffer[base+1] = color[pidx].g
 			tpos1 += 5
 			tpos2 += 3
 			jdx++
@@ -74,18 +81,21 @@ func createSineTable() {
 }
 
 func createPalette() {
-	idx := 0
+	idx := byte(0)
 	for idx < 64 {
-		r := idx << 2
-		g := 255 - ((idx << 2) + 1)
-		color[idx] = "rgb(" + fmt.Sprint(r) + "," + fmt.Sprint(g) + ",0)"
+		r := byte(idx) << 2
+		g := byte(255) - ((idx << 2) + 1)
+		color[idx].r = r
+		color[idx].g = g
 		g = (idx << 2) + 1
-		color[idx+64] = "rgb(255," + fmt.Sprint(g) + ",0)"
+		color[idx+64].r = 255
+		color[idx+64].g = g
 		r = 255 - ((idx << 2) + 1)
 		g = 255 - ((idx << 2) + 1)
-		color[idx+128] = "rgb(" + fmt.Sprint(r) + "," + fmt.Sprint(g) + ",0)"
+		color[idx+128].r = r
+		color[idx+128].g = g
 		g = (idx << 2) + 1
-		color[idx+192] = "rgb(0," + fmt.Sprint(g) + ",0)"
+		color[idx+192].g = g
 		idx++
 	}
 }
