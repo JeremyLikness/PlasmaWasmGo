@@ -2,6 +2,8 @@
 
 This is a simple experiment to look at WASM performance vs. plain JavaScript. It is inspired by [this plasma effect](https://jsfiddle.net/jeremylikness/bVY6t/).
 
+Read the related blog post: [Gopher meet Plasma: A WebAssembly Experiment](https://blog.jeremylikness.com/gopher-meet-plasma-a-webassembly-experiment-4048e4d3b8d7?utm_source=jeliknes&utm_campaign=plasmawasmgo&utm_medium=githubb).
+
 ## Instructions
 
 I assume you have [Go](https://golang.org) installed. The link will provide instructions.
