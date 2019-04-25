@@ -9,33 +9,22 @@ trigger:
 pool:
   vmImage: 'Ubuntu-16.04'
 
-variables:
-  GOBIN:  '$(GOPATH)/bin' # Go binaries path
-  GOROOT: '/usr/local/go1.11' # Go installation path
-  GOPATH: '$(system.defaultWorkingDirectory)/gopath' # Go workspace path
-  modulePath: '$(GOPATH)/src/github.com/$(build.repository.name)' # Path to the module's code
-
 steps:
-- script: |
-    mkdir -p '$(GOBIN)'
-    mkdir -p '$(GOPATH)/pkg'
-    mkdir -p '$(modulePath)'
-    shopt -s extglob
-    shopt -s dotglob
-    mv !(gopath) '$(modulePath)'
-    echo '##vso[task.prependpath]$(GOBIN)'
-    echo '##vso[task.prependpath]$(GOROOT)/bin'
-  displayName: 'Set up the Go workspace'
+
+- task: DockerInstaller@0
+  inputs:
+    dockerVersion: '17.09.0-ce'
+
+- script:
+    docker run -i --rm -v $(pwd):/usr/src/plasma -w /usr/src/plasma -e GOOS=js -e GOARCH=wasm golang:latest go build -o plasma.wasm plasma.go
+  displayName: 'Build WASM'
+
+- script: 
+    docker run -i --rm -v $(pwd):/usr/src/plasma -w /usr/src/plasma golang:latest cp /usr/local/go/misc/wasm/wasm_exec.js /usr/src/plasma
+  displayName: 'Copy current wasm_exec.js'
 
 - script: |
-    go version
-    go get -v -t -d ./...
-    GOOS=js GOARCH=wasm go build -o plasma.wasm plasma.go
-  workingDirectory: '$(modulePath)'
-  displayName: 'Get dependencies, then build'
-
-- script: |
-    cp $(GOOROOT)/misc/wasm/wasm_exec.js $(Build.ArtifactStagingDirectory)
+    cp wasm_exec.js $(Build.ArtifactStagingDirectory)
     cp plasma.js $(Build.ArtifactStagingDirectory)
     cp plasma.wasm $(Build.ArtifactStagingDirectory)
     cp index.html $(Build.ArtifactStagingDirectory)
