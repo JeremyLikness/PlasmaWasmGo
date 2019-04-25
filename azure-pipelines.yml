@@ -28,7 +28,6 @@ steps:
     cp plasma.js $(Build.ArtifactStagingDirectory)
     cp plasma.wasm $(Build.ArtifactStagingDirectory)
     cp index.html $(Build.ArtifactStagingDirectory)
-  workingDirectory: '$(modulePath)'
   displayName: 'Copy assets to aritfacts staging'
 
 - task: PublishBuildArtifacts@1
