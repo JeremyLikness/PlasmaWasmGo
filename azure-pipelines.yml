@@ -30,8 +30,7 @@ steps:
 - script: |
     go version
     go get -v -t -d ./...
-    GOOS=js GOARCH=wasm
-    go build -v -o plasma.wasm plasma.go
+    GOOS=js GOARCH=wasm go build -o plasma.wasm plasma.go
   workingDirectory: '$(modulePath)'
   displayName: 'Get dependencies, then build'
 
