@@ -8,7 +8,9 @@
 
 This is a simple experiment to look at WASM performance vs. plain JavaScript. It is inspired by [this plasma effect](https://jsfiddle.net/jeremylikness/bVY6t/). After building this, I fixed a bug and improved the performance of the JavaScript-only version [here](https://jsfiddle.net/jeremylikness/1xfh3c25/). 
 
-Read the related blog post: [Gopher meet Plasma: A WebAssembly Experiment](https://blog.jeremylikness.com/gopher-meet-plasma-a-webassembly-experiment-4048e4d3b8d7?utm_source=jeliknes&utm_campaign=plasmawasmgo&utm_medium=githubb).
+Read the related blog post: [Gopher meet Plasma: A WebAssembly Experiment](https://blog.jeremylikness.com/gopher-meet-plasma-a-webassembly-experiment-4048e4d3b8d7?utm_source=jeliknes&utm_campaign=plasmawasmgo&utm_medium=github).
+
+> This repository is continuously built and deployed using free Azure Pipelines. If you're interested in how it was setup and configured to build automatically and deploy to low cost Azure Storage Static Websites, read [Deploy WebAssembly from GitHub to Azure Storage Static Websites with Azure Pipelines](https://jlik.me/fzj).
 
 ## Instructions
 
